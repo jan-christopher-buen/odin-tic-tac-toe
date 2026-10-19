@@ -76,3 +76,46 @@ const GameController = (function () {
 
     return { playRound, getCurrentPlayer, newGame };
 })();
+
+
+const DisplayController = (function () {
+    const boardElement = document.querySelector(".board");
+    const statusElement = document.querySelector(".status");
+    const restartButton = document.querySelector(".restart-btn");
+
+    const showTurn = () => {
+        const player = GameController.getCurrentPlayer();
+        statusElement.textContent = `${player.name}'s turn (${player.marker})`;
+    };
+
+    const render = () => {
+        boardElement.textContent = "";
+        Gameboard.getBoard().forEach((marker, index) => {
+            const cell = document.createElement("button");
+            cell.classList.add("cell");
+            cell.dataset.index = index;
+            cell.textContent = marker;
+            boardElement.appendChild(cell);
+        });
+    };
+
+    boardElement.addEventListener("click", (e) => {
+        const index = e.target.dataset.index;
+        if (index === undefined) {
+            return;
+        }
+        statusElement.textContent = GameController.playRound(Number(index));
+        render();
+    });
+
+    restartButton.addEventListener("click", () => {
+        GameController.newGame();
+        showTurn();
+        render();
+    });
+
+    showTurn();
+    render();
+
+    return { render };
+})();
