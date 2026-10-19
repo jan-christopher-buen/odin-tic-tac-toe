@@ -52,3 +52,26 @@ main {
     font-weight: bold;
     cursor: pointer;
 }
+
+.names-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.names-form input {
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.names-form button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #22c55e;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}

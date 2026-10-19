@@ -66,6 +66,11 @@ const GameController = (function () {
         return `${currentPlayer.name}'s turn (${currentPlayer.marker})`;
     };
 
+    const setPlayerNames = (name1, name2) => {
+        players[0].name = name1 || "Player 1";
+        players[1].name = name2 || "Player 2";
+    };
+
     const getCurrentPlayer = () => currentPlayer;
 
     const newGame = () => {
@@ -74,7 +79,7 @@ const GameController = (function () {
         gameOver = false;
     };
 
-    return { playRound, getCurrentPlayer, newGame };
+    return { playRound, getCurrentPlayer, newGame, setPlayerNames };
 })();
 
 
@@ -82,6 +87,7 @@ const DisplayController = (function () {
     const boardElement = document.querySelector(".board");
     const statusElement = document.querySelector(".status");
     const restartButton = document.querySelector(".restart-btn");
+    const namesForm = document.querySelector(".names-form");
 
     const showTurn = () => {
         const player = GameController.getCurrentPlayer();
@@ -109,6 +115,16 @@ const DisplayController = (function () {
     });
 
     restartButton.addEventListener("click", () => {
+        GameController.newGame();
+        showTurn();
+        render();
+    });
+
+    namesForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name1 = document.querySelector("#player1").value.trim();
+        const name2 = document.querySelector("#player2").value.trim();
+        GameController.setPlayerNames(name1, name2);
         GameController.newGame();
         showTurn();
         render();
