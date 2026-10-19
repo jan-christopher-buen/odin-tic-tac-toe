@@ -19,3 +19,60 @@ const Gameboard = (function () {
 
     return { getBoard, placeMarker, reset };
 })();
+
+
+function createPlayer(name, marker) {
+    return { name, marker };
+}
+
+const GameController = (function () {
+    const players = [createPlayer("Player 1", "X"), createPlayer("Player 2", "O")];
+    let currentPlayer = players[0];
+    let gameOver = false;
+
+    const winningLines = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6],
+    ];
+
+    const switchPlayer = () => {
+        currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+    };
+
+    const checkWinner = (marker) => {
+        const board = Gameboard.getBoard();
+        return winningLines.some((line) => line.every((index) => board[index] === marker));
+    };
+
+    const isTie = () => Gameboard.getBoard().every((cell) => cell !== "");
+
+    const playRound = (index) => {
+        if (gameOver) {
+            return "The game is over. Start a new game.";
+        }
+        if (!Gameboard.placeMarker(index, currentPlayer.marker)) {
+            return "That square is taken. Pick another one.";
+        }
+        if (checkWinner(currentPlayer.marker)) {
+            gameOver = true;
+            return `${currentPlayer.name} wins!`;
+        }
+        if (isTie()) {
+            gameOver = true;
+            return "It's a tie!";
+        }
+        switchPlayer();
+        return `${currentPlayer.name}'s turn (${currentPlayer.marker})`;
+    };
+
+    const getCurrentPlayer = () => currentPlayer;
+
+    const newGame = () => {
+        Gameboard.reset();
+        currentPlayer = players[0];
+        gameOver = false;
+    };
+
+    return { playRound, getCurrentPlayer, newGame };
+})();
